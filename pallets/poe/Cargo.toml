@@ -1,6 +1,6 @@
 [package]
 authors = ['Substrate DevHub <https://github.com/substrate-developer-hub>']
-description = 'FRAME pallet template for defining custom runtime logic.'
+description = 'FRAME pallet template for proof of existence.'
 edition = '2018'
 homepage = 'https://substrate.dev'
 license = 'Unlicense'
