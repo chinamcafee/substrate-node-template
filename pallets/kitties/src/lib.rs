@@ -37,7 +37,8 @@ decl_storage! {
         pub Kitties get(fn kitties): map hasher(blake2_128_concat) KittyIndex => Option<Kitty>;
         pub KittiesCount get(fn kitties_count): KittyIndex;
         pub KittyOwners get(fn kitty_owners): map hasher(blake2_128_concat) KittyIndex => Option<T::AccountId>;
-
+        pub KittyPrices get(fn kitty_price): map hasher(blake2_128_concat) KittyIndex => Option<BalanceOf<T>>;
+        pub Test: u32;
     }
 }
 
@@ -46,6 +47,9 @@ decl_error! {
         KittiesCountOverflow,
         InvalidKittyId,
         RequireDifferentParent,
+        RequireOwner,
+        NotForSale,
+        PriceTooLow
     }
 }
 
@@ -78,8 +82,14 @@ decl_module! {
         #[weight = 0]
         pub fn transfer(origin, to: T::AccountId, kitty_id:KittyIndex) {
             let sender = ensure_signed(origin)?;
+            ensure!(Self::kitty_owner(&kitty_id) == Some(sender.clone()), Error::<T>::RequireOwner)
             <KittyOwners<T>>::insert(kitty_id,to.clone());
              Self::deposit_event(RawEvent::Transferred(sender,to,kitty_id));
+        }
+
+        fn on_runtime_upgrade() -> Weight {
+            let _ = Test::translate::<_,_>(|value: Option<u16>| value.map(|v| v as u32));
+            0
         }
 
         #[weight = 0]
@@ -87,6 +97,24 @@ decl_module! {
              let sender = ensure_signed(origin)?;
              let new_kitty_id = Self::do_breed(&sender, kitty_id_1, kitty_id_2)?;
              Self::deposit_event(RawEvent::Created(sender,new_kitty_id));
+        }
+
+        #[weight = 0]
+        pub fn ask(origin, kitty_id: KittyIndex, new_price; Option<BalanceOf<T>>) {
+            let sender = ensure_signed(origin)?;
+            ensure!(Self::kitty_owner(&kitty_id) == Some(sender.clone()), Error::<T>::RequireOwner);
+            <KittyPrices<T>>>::mutate_exists(kitty_id, |price| *price = new_price);
+        }
+
+        #[weight = 0]
+        pub fn buy(origin, kitty_id: KittyIndex, price: BalanceOf<T>) {
+            let sender = ensure_signed(origin)?;
+            let owner = Self::kitty_owner(kitty_id).ok_or(Error::<T>::InvalidKittyId)?;
+            let kitty_price = Self::kitty_price(kitty_id).ok_or(Error::<T>::NotForSale)?;
+            ensure!(price >= kitty_price, Error::<T>::PriceTooLow);
+            T::Currency::transfer(&sender, &owner, kitty_price, ExistenceRequirement::KeepAlive)?;
+            <KittyPrices<T>>>::remove(kitty_id);
+            <KittyPrices<T>>>::insert(kitty_id, sender.clone());
         }
 
     }
