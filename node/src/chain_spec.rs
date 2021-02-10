@@ -43,23 +43,23 @@ pub fn development_config() -> Result<ChainSpec, String> {
 
 	Ok(ChainSpec::from_genesis(
 		// Name
-		"Development",
+		"Czc-Development",
 		// ID
-		"dev",
+		"czc-dev",
 		ChainType::Development,
 		move || testnet_genesis(
 			wasm_binary,
 			// Initial PoA authorities
 			vec![
-				authority_keys_from_seed("Alice"),
+				authority_keys_from_seed("czc"),
 			],
 			// Sudo account
-			get_account_id_from_seed::<sr25519::Public>("Alice"),
+			get_account_id_from_seed::<sr25519::Public>("czc"),
 			// Pre-funded accounts
 			vec![
-				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				get_account_id_from_seed::<sr25519::Public>("czc"),
 				get_account_id_from_seed::<sr25519::Public>("Bob"),
-				get_account_id_from_seed::<sr25519::Public>("Alice//stash"),
+				get_account_id_from_seed::<sr25519::Public>("czc//stash"),
 				get_account_id_from_seed::<sr25519::Public>("Bob//stash"),
 			],
 			true,
@@ -82,7 +82,7 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
 
 	Ok(ChainSpec::from_genesis(
 		// Name
-		"Local Testnet",
+		"Czc-Testnet",
 		// ID
 		"local_testnet",
 		ChainType::Local,
@@ -90,20 +90,20 @@ pub fn local_testnet_config() -> Result<ChainSpec, String> {
 			wasm_binary,
 			// Initial PoA authorities
 			vec![
-				authority_keys_from_seed("Alice"),
+				authority_keys_from_seed("czc"),
 				authority_keys_from_seed("Bob"),
 			],
 			// Sudo account
-			get_account_id_from_seed::<sr25519::Public>("Alice"),
+			get_account_id_from_seed::<sr25519::Public>("czc"),
 			// Pre-funded accounts
 			vec![
-				get_account_id_from_seed::<sr25519::Public>("Alice"),
+				get_account_id_from_seed::<sr25519::Public>("czc"),
 				get_account_id_from_seed::<sr25519::Public>("Bob"),
 				get_account_id_from_seed::<sr25519::Public>("Charlie"),
 				get_account_id_from_seed::<sr25519::Public>("Dave"),
 				get_account_id_from_seed::<sr25519::Public>("Eve"),
 				get_account_id_from_seed::<sr25519::Public>("Ferdie"),
-				get_account_id_from_seed::<sr25519::Public>("Alice//stash"),
+				get_account_id_from_seed::<sr25519::Public>("czc//stash"),
 				get_account_id_from_seed::<sr25519::Public>("Bob//stash"),
 				get_account_id_from_seed::<sr25519::Public>("Charlie//stash"),
 				get_account_id_from_seed::<sr25519::Public>("Dave//stash"),

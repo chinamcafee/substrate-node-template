@@ -7,4 +7,5 @@ members = [
     'pallets/template',
     'pallets/poe',
     'runtime',
+    'pallets/benchmark',
 ]

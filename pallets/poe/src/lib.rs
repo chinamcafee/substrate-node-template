@@ -51,7 +51,7 @@ decl_storage! {
     trait Store for Module<T: Trait> as PoeModule {
         /// The storage item for our proofs.
         /// It maps a proof to the user who made the claim and when they made it.
-        Proofs: get(fn proofs): map hasher(blake2_128_concat) Vec<u8> => (T::AccountId, T::BlockNumber);
+        Proofs: map hasher(blake2_128_concat) Vec<u8> => (T::AccountId, T::BlockNumber);
     }
 }
 
